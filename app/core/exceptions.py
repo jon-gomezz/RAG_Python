@@ -56,3 +56,11 @@ class LLMGenerationError(RAGError):
     def __init__(self, reason: str) -> None:
         self.reason = reason
         super().__init__(f"Error al generar la respuesta con el LLM: {reason}")
+
+
+class EmbeddingError(RAGError):
+    """Fallo al calcular los embeddings con el proveedor (red, API, etc.)."""
+
+    def __init__(self, reason: str) -> None:
+        self.reason = reason
+        super().__init__(f"Error al calcular los embeddings: {reason}")
