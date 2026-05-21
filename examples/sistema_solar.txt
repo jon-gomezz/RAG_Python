@@ -1,0 +1,12 @@
+El sistema solar está formado por ocho planetas que orbitan alrededor del Sol:
+Mercurio, Venus, Tierra, Marte, Júpiter, Saturno, Urano y Neptuno.
+
+Los cuatro planetas más cercanos al Sol (Mercurio, Venus, Tierra y Marte) se
+denominan planetas rocosos o terrestres, porque tienen una superficie sólida.
+
+Los cuatro planetas exteriores (Júpiter, Saturno, Urano y Neptuno) son gigantes
+gaseosos, mucho más grandes y compuestos principalmente de gas.
+
+Júpiter es el planeta más grande del sistema solar. La Tierra es el único planeta
+conocido que alberga vida. El Sol es una estrella de tipo enana amarilla y
+concentra la mayor parte de la masa del sistema solar.
