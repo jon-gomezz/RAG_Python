@@ -8,11 +8,15 @@ devolviendo siempre los fragmentos (fuentes) utilizados.
 ## Características
 
 - Subida de uno o varios ficheros `.txt` / `.md` / `.pdf`.
-- Extracción de texto y fragmentación (chunking) configurable con solapamiento.
-- Recuperación por TF-IDF + similitud del coseno (`top_k`, puntuación mínima de relevancia).
+- Extracción de texto con **normalización** (espacios y saltos de línea) y
+  fragmentación (chunking) configurable con solapamiento.
+- **Deduplicado de fragmentos** repetidos (cabeceras, índices) antes de indexar.
+- Recuperación por TF-IDF + similitud del coseno (`top_k`, puntuación mínima de
+  relevancia), con **modo semántico opcional** (embeddings).
 - Generación de respuestas fundamentadas; respuesta clara de "información insuficiente"
   cuando la recuperación es demasiado débil (sin llamar al LLM).
 - Fragmentos fuente devueltos con cada respuesta (**trazabilidad**).
+- Gestión de documentos: listar y borrar lo indexado.
 - Manejo de errores centralizado con códigos HTTP claros.
 
 ## Endpoints
@@ -167,7 +171,9 @@ linter, formato, tipos y tests en cada push y pull request.
   (`RETRIEVAL_MODE=embeddings`), intercambiable gracias a una interfaz común
   `Retriever`, para casos que requieren entender significados o cruzar idiomas.
 - **Fragmentación por caracteres con solapamiento**: simple y predecible; el
-  solapamiento reduce el riesgo de partir una idea entre dos fragmentos.
+  solapamiento reduce el riesgo de partir una idea entre dos fragmentos. El texto
+  se **normaliza** (espacios y saltos sobrantes) y los fragmentos **duplicados** se
+  eliminan antes de indexar, para no recuperar contenido repetido.
 - **Detección de contexto insuficiente antes de llamar al LLM**: si la recuperación
   no devuelve fragmentos, se responde sin gastar una llamada al modelo, evitando
   además respuestas inventadas.
@@ -183,11 +189,13 @@ linter, formato, tipos y tests en cada push y pull request.
 
 - **TF-IDF es léxico, no semántico**: compara palabras literales, así que una
   pregunta en un idioma distinto al del documento (o con sinónimos) puede no
-  recuperar nada. Mejora futura: **búsqueda semántica con embeddings**.
+  recuperar nada. Se **mitiga** activando el modo semántico
+  (`RETRIEVAL_MODE=embeddings`), disponible en el proyecto.
 - **El chunking por caracteres** puede partir tablas o estructuras; un troceado
   consciente de la estructura del documento mejoraría la calidad.
 - **Las páginas tipo índice** (que repiten muchas palabras clave) pueden puntuar
-  alto sin aportar contenido; se podría filtrar o reordenar (re-ranking).
+  alto sin aportar contenido; el deduplicado elimina fragmentos idénticos, pero un
+  filtrado o reordenado (re-ranking) más fino sería una mejora futura.
 - **Almacenamiento en memoria**: los documentos se pierden al reiniciar. Mejora
   futura: persistencia (base de datos o índice en disco).
 
@@ -195,13 +203,16 @@ linter, formato, tipos y tests en cada push y pull request.
 
 ```
 app/
-  core/      configuración, excepciones y manejadores de error
-  services/  loaders, chunker, retriever, generador de respuestas, cliente LLM, tubería RAG
-  store/     almacén en memoria de documentos/índice
-  main.py    aplicación FastAPI y endpoints
-  schemas.py esquemas Pydantic de petición/respuesta
-tests/       tests unitarios y de API
-examples/    ficheros de ejemplo para pruebas manuales
+  core/          configuración, excepciones y manejadores de error
+  services/      loaders, limpieza de texto, chunker, recuperadores (TF-IDF y
+                 embeddings), clientes LLM/embeddings, generador de respuestas,
+                 tubería RAG
+  store/         almacén en memoria de documentos/índice
+  main.py        aplicación FastAPI y endpoints
+  schemas.py     esquemas Pydantic de petición/respuesta
+  dependencies.py inyección de dependencias (tubería y recuperador)
+tests/           tests unitarios y de API
+examples/        ficheros de ejemplo para pruebas manuales
 ```
 
 ## Docker (opcional)
