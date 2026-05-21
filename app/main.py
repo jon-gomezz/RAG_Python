@@ -16,7 +16,10 @@ from app.dependencies import get_pipeline
 from app.schemas import (
     AskRequest,
     AskResponse,
+    DeleteResponse,
+    DocumentInfo,
     DocumentIngested,
+    DocumentsListResponse,
     HealthResponse,
     SourceChunk,
     UploadResponse,
@@ -89,6 +92,33 @@ def upload_documents(
     return UploadResponse(
         documents=ingeridos,
         total_chunks=sum(d.chunks_created for d in ingeridos),
+    )
+
+
+@app.get("/documents", response_model=DocumentsListResponse)
+def list_documents(
+    pipeline: RAGPipeline = Depends(get_pipeline),
+) -> DocumentsListResponse:
+    """Lista los documentos indexados y su número de fragmentos."""
+    documentos = pipeline.list_documents()
+    items = [DocumentInfo(filename=nombre, chunks=n) for nombre, n in documentos.items()]
+    return DocumentsListResponse(
+        documents=items,
+        total_documents=len(items),
+        total_chunks=sum(i.chunks for i in items),
+    )
+
+
+@app.delete("/documents", response_model=DeleteResponse)
+def delete_documents(
+    pipeline: RAGPipeline = Depends(get_pipeline),
+) -> DeleteResponse:
+    """Borra todos los documentos indexados y reinicia el índice."""
+    eliminados = len(pipeline.list_documents())
+    pipeline.clear()
+    return DeleteResponse(
+        detail="Se han eliminado todos los documentos.",
+        documents_removed=eliminados,
     )
 
 

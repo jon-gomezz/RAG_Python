@@ -32,6 +32,28 @@ class UploadResponse(BaseModel):
     total_chunks: int
 
 
+class DocumentInfo(BaseModel):
+    """Información de un documento almacenado."""
+
+    filename: str
+    chunks: int
+
+
+class DocumentsListResponse(BaseModel):
+    """Listado de los documentos indexados."""
+
+    documents: list[DocumentInfo]
+    total_documents: int
+    total_chunks: int
+
+
+class DeleteResponse(BaseModel):
+    """Confirmación del borrado de todos los documentos."""
+
+    detail: str
+    documents_removed: int
+
+
 class AskRequest(BaseModel):
     """Petición para hacer una pregunta."""
 
