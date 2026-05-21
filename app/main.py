@@ -8,10 +8,10 @@ conocidos a respuestas HTTP claras.
 
 from __future__ import annotations
 
-from fastapi import Depends, FastAPI, File, HTTPException, UploadFile, status
+from fastapi import Depends, FastAPI, File, HTTPException, UploadFile
 from fastapi.openapi.utils import get_openapi
 
-from app.core.exceptions import RAGError, UnsupportedFileTypeError
+from app.core.error_handlers import register_exception_handlers
 from app.dependencies import get_pipeline
 from app.schemas import (
     AskRequest,
@@ -28,6 +28,8 @@ app = FastAPI(
     description="Responde preguntas usando únicamente el contenido de los documentos subidos.",
     version="1.0.0",
 )
+
+register_exception_handlers(app)
 
 
 def custom_openapi() -> dict:
@@ -69,17 +71,15 @@ def upload_documents(
     pipeline: RAGPipeline = Depends(get_pipeline),
 ) -> UploadResponse:
     """Sube uno o varios documentos (.txt, .md, .pdf) y los indexa."""
+    if not files or all(not (f.filename or "").strip() for f in files):
+        raise HTTPException(status_code=400, detail="No se ha enviado ningún fichero.")
+
+    # Los errores de dominio (extensión no soportada, fichero vacío, etc.) los
+    # traducen a HTTP los manejadores centralizados; el endpoint queda delgado.
     ingeridos: list[DocumentIngested] = []
     for upload in files:
         content = upload.file.read()
-        try:
-            resultado = pipeline.ingest_document(upload.filename or "", content)
-        except UnsupportedFileTypeError as exc:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)
-            ) from exc
-        except RAGError as exc:
-            raise HTTPException(status_code=422, detail=str(exc)) from exc
+        resultado = pipeline.ingest_document(upload.filename or "", content)
         ingeridos.append(
             DocumentIngested(
                 filename=resultado.source, chunks_created=resultado.chunks_created

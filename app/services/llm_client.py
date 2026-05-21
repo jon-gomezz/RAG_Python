@@ -7,17 +7,11 @@ resto del código y los tests no dependan de la librería ni de tener una clave.
 
 from __future__ import annotations
 
-from app.core.exceptions import RAGError
+# Se reexporta MissingAPIKeyError desde el módulo central de excepciones para
+# mantener un único punto de definición sin romper los imports existentes.
+from app.core.exceptions import MissingAPIKeyError
 
-
-class MissingAPIKeyError(RAGError):
-    """No se ha configurado la clave de API del LLM (LLM_API_KEY)."""
-
-    def __init__(self) -> None:
-        super().__init__(
-            "Falta la clave de API del LLM. Define la variable de entorno "
-            "LLM_API_KEY para poder generar respuestas."
-        )
+__all__ = ["MissingAPIKeyError", "OpenAILLMClient"]
 
 
 class OpenAILLMClient:
