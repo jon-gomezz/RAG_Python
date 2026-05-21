@@ -119,3 +119,12 @@ class RAGPipeline:
             status=status,
             sources=generated.sources,
         )
+
+    def list_documents(self) -> dict[str, int]:
+        """Devuelve los documentos almacenados y su número de fragmentos."""
+        return self._store.documents
+
+    def clear(self) -> None:
+        """Vacía el almacén y reinicia el índice del recuperador."""
+        self._store.clear()
+        self._retriever.index([])

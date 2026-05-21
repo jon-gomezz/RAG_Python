@@ -17,11 +17,13 @@ devolviendo siempre los fragmentos (fuentes) utilizados.
 
 ## Endpoints
 
-| Método | Ruta                 | Descripción                                  |
-| ------ | -------------------- | -------------------------------------------- |
-| `GET`  | `/health`            | Comprobación de salud del servicio.          |
-| `POST` | `/documents/upload`  | Sube uno o varios documentos y los indexa.   |
-| `POST` | `/ask`               | Responde una pregunta con el contenido subido. |
+| Método   | Ruta                 | Descripción                                     |
+| -------- | -------------------- | ----------------------------------------------- |
+| `GET`    | `/health`            | Comprobación de salud del servicio.             |
+| `POST`   | `/documents/upload`  | Sube uno o varios documentos y los indexa.      |
+| `GET`    | `/documents`         | Lista los documentos indexados y sus fragmentos. |
+| `DELETE` | `/documents`         | Borra todos los documentos indexados.           |
+| `POST`   | `/ask`               | Responde una pregunta con el contenido subido.  |
 
 Documentación interactiva (Swagger UI) disponible en `/docs` al arrancar el servicio.
 
