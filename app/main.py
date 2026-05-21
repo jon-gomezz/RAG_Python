@@ -47,8 +47,10 @@ def custom_openapi() -> dict:
         description=app.description,
         routes=app.routes,
     )
-    body = schema.get("components", {}).get("schemas", {}).get(
-        "Body_upload_documents_documents_upload_post"
+    body = (
+        schema.get("components", {})
+        .get("schemas", {})
+        .get("Body_upload_documents_documents_upload_post")
     )
     if body:
         body["properties"]["files"]["items"] = {"type": "string", "format": "binary"}
@@ -56,7 +58,7 @@ def custom_openapi() -> dict:
     return schema
 
 
-app.openapi = custom_openapi
+app.openapi = custom_openapi  # type: ignore[method-assign]  # patrón oficial de FastAPI
 
 
 @app.get("/health", response_model=HealthResponse)
@@ -81,9 +83,7 @@ def upload_documents(
         content = upload.file.read()
         resultado = pipeline.ingest_document(upload.filename or "", content)
         ingeridos.append(
-            DocumentIngested(
-                filename=resultado.source, chunks_created=resultado.chunks_created
-            )
+            DocumentIngested(filename=resultado.source, chunks_created=resultado.chunks_created)
         )
 
     return UploadResponse(

@@ -88,7 +88,7 @@ class TfidfRetriever:
 
         results = [
             RetrievalResult(chunk=chunk, score=float(score))
-            for chunk, score in zip(self._chunks, scores)
+            for chunk, score in zip(self._chunks, scores, strict=True)
             if score >= min_score
         ]
         results.sort(key=lambda r: r.score, reverse=True)

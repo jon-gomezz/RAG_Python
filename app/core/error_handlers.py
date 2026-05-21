@@ -23,10 +23,10 @@ from app.core.exceptions import (
 # Mapa excepción -> código HTTP. Las subclases no listadas usan el fallback RAGError.
 _STATUS_BY_EXCEPTION: list[tuple[type[RAGError], int]] = [
     (UnsupportedFileTypeError, 400),  # petición inválida del cliente
-    (EmptyFileError, 422),            # entrada no procesable
+    (EmptyFileError, 422),  # entrada no procesable
     (DocumentLoadError, 422),
-    (MissingAPIKeyError, 503),        # servicio mal configurado
-    (LLMGenerationError, 502),        # fallo del proveedor externo
+    (MissingAPIKeyError, 503),  # servicio mal configurado
+    (LLMGenerationError, 502),  # fallo del proveedor externo
 ]
 
 

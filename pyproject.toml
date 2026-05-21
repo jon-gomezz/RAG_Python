@@ -1,0 +1,27 @@
+[tool.ruff]
+# Longitud de línea y versión de Python objetivo.
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+# Conjunto de reglas: errores/estilo (E,F,W), imports (I), bugbear (B),
+# comprensiones (C4), pyupgrade (UP) y simplificaciones (SIM).
+select = ["E", "F", "W", "I", "B", "C4", "UP", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+# En los tests permitimos asserts y algunos atajos.
+"tests/*" = ["B011"]
+
+[tool.ruff.lint.flake8-bugbear]
+# Llamadas legítimas en valores por defecto de FastAPI (inyección de dependencias).
+extend-immutable-calls = ["fastapi.Depends", "fastapi.File", "fastapi.Query"]
+
+[tool.mypy]
+python_version = "3.12"
+# Las librerías de terceros sin tipos no deben romper la comprobación.
+ignore_missing_imports = true
+check_untyped_defs = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+# El código de la app debe estar tipado; los tests son más laxos.
+exclude = "tests/"

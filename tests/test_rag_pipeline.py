@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import pytest
+
 from app.services.answer_generator import (
     INSUFFICIENT_CONTEXT_MESSAGE,
     AnswerGenerator,
@@ -13,8 +15,6 @@ from app.services.rag_pipeline import (
 )
 from app.services.retriever import TfidfRetriever
 from app.store.document_store import DocumentStore
-
-import pytest
 
 
 class FakeLLMClient:

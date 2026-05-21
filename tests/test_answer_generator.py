@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import pytest
+
 from app.services.answer_generator import (
     INSUFFICIENT_CONTEXT_MESSAGE,
     AnswerGenerator,
@@ -11,8 +13,6 @@ from app.services.answer_generator import (
 from app.services.chunker import Chunk
 from app.services.llm_client import MissingAPIKeyError, OpenAILLMClient
 from app.services.retriever import RetrievalResult
-
-import pytest
 
 
 class FakeLLMClient:

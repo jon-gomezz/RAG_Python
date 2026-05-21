@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pytest
+from pydantic import ValidationError
 
 from app.core.config import Settings
 
@@ -28,11 +29,11 @@ def test_lee_de_variables_de_entorno(monkeypatch):
 
 def test_rechaza_chunk_size_no_positivo(monkeypatch):
     monkeypatch.setenv("CHUNK_SIZE", "0")
-    with pytest.raises(Exception):
+    with pytest.raises(ValidationError):
         Settings(_env_file=None)
 
 
 def test_rechaza_min_relevance_fuera_de_rango(monkeypatch):
     monkeypatch.setenv("MIN_RELEVANCE_SCORE", "1.5")
-    with pytest.raises(Exception):
+    with pytest.raises(ValidationError):
         Settings(_env_file=None)

@@ -63,10 +63,7 @@ def load_document(filename: str, content: bytes) -> str:
         raise UnsupportedFileTypeError(extension)
 
     try:
-        if extension == ".pdf":
-            text = _load_pdf(content)
-        else:
-            text = _load_text(content)
+        text = _load_pdf(content) if extension == ".pdf" else _load_text(content)
     except (UnsupportedFileTypeError, EmptyFileError):
         raise
     except Exception as exc:  # noqa: BLE001 - se reempaqueta con contexto

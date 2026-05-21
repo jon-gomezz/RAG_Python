@@ -19,8 +19,7 @@ class UnsupportedFileTypeError(RAGError):
     def __init__(self, extension: str) -> None:
         self.extension = extension
         super().__init__(
-            f"Extensión no soportada: '{extension}'. "
-            "Solo se admiten ficheros .txt, .md y .pdf."
+            f"Extensión no soportada: '{extension}'. Solo se admiten ficheros .txt, .md y .pdf."
         )
 
 
@@ -29,9 +28,7 @@ class EmptyFileError(RAGError):
 
     def __init__(self, filename: str) -> None:
         self.filename = filename
-        super().__init__(
-            f"El fichero '{filename}' está vacío o no contiene texto extraíble."
-        )
+        super().__init__(f"El fichero '{filename}' está vacío o no contiene texto extraíble.")
 
 
 class DocumentLoadError(RAGError):
@@ -40,9 +37,7 @@ class DocumentLoadError(RAGError):
     def __init__(self, filename: str, reason: str) -> None:
         self.filename = filename
         self.reason = reason
-        super().__init__(
-            f"No se pudo procesar el fichero '{filename}': {reason}"
-        )
+        super().__init__(f"No se pudo procesar el fichero '{filename}': {reason}")
 
 
 class MissingAPIKeyError(RAGError):

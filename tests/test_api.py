@@ -51,7 +51,9 @@ def test_health(client):
 
 
 def test_subida_txt_ok(client):
-    files = {"files": ("doc.txt", b"Los delfines son mamiferos marinos muy inteligentes.", "text/plain")}
+    files = {
+        "files": ("doc.txt", b"Los delfines son mamiferos marinos muy inteligentes.", "text/plain")
+    }
     resp = client.post("/documents/upload", files=files)
     assert resp.status_code == 200
     body = resp.json()
@@ -83,7 +85,9 @@ def test_preguntar_sin_documentos(client):
 
 
 def test_flujo_subir_y_preguntar(client):
-    files = {"files": ("doc.txt", b"La Torre Eiffel esta en Paris y mide 330 metros.", "text/plain")}
+    files = {
+        "files": ("doc.txt", b"La Torre Eiffel esta en Paris y mide 330 metros.", "text/plain")
+    }
     client.post("/documents/upload", files=files)
 
     resp = client.post("/ask", json={"question": "¿Donde esta la Torre Eiffel?"})

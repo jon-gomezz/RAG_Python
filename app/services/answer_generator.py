@@ -20,8 +20,7 @@ from app.services.retriever import RetrievalResult
 
 # Respuesta devuelta cuando no hay contexto suficiente para responder.
 INSUFFICIENT_CONTEXT_MESSAGE = (
-    "No hay información suficiente en los documentos proporcionados para "
-    "responder a esta pregunta."
+    "No hay información suficiente en los documentos proporcionados para responder a esta pregunta."
 )
 
 # Instrucción de sistema: fuerza al modelo a ceñirse al contexto.
@@ -66,8 +65,7 @@ def build_context(results: list[RetrievalResult]) -> str:
     for i, result in enumerate(results, start=1):
         origen = result.chunk.source or "desconocido"
         bloques.append(
-            f"[Fragmento {i} | fuente: {origen} | parte: {result.chunk.index}]\n"
-            f"{result.chunk.text}"
+            f"[Fragmento {i} | fuente: {origen} | parte: {result.chunk.index}]\n{result.chunk.text}"
         )
     return "\n\n".join(bloques)
 
@@ -88,9 +86,7 @@ class AnswerGenerator:
     def __init__(self, client: LLMClient) -> None:
         self._client = client
 
-    def generate(
-        self, question: str, results: list[RetrievalResult]
-    ) -> GeneratedAnswer:
+    def generate(self, question: str, results: list[RetrievalResult]) -> GeneratedAnswer:
         """Genera la respuesta a partir de la pregunta y los fragmentos.
 
         Si ``results`` está vacío, devuelve el mensaje de información insuficiente
