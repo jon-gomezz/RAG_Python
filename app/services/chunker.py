@@ -87,3 +87,20 @@ def chunk_text(
         start += step
 
     return chunks
+
+
+def deduplicate_chunks(chunks: list[Chunk]) -> list[Chunk]:
+    """Elimina fragmentos con texto idéntico, conservando el primero.
+
+    Evita que contenido repetido (cabeceras, índices, pies de página que se
+    repiten entre páginas) ocupe varias posiciones en la recuperación. Mantiene
+    el orden original y los metadatos de los fragmentos conservados.
+    """
+    vistos: set[str] = set()
+    unicos: list[Chunk] = []
+    for chunk in chunks:
+        if chunk.text in vistos:
+            continue
+        vistos.add(chunk.text)
+        unicos.append(chunk)
+    return unicos

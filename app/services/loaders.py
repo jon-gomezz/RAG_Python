@@ -17,6 +17,7 @@ from app.core.exceptions import (
     EmptyFileError,
     UnsupportedFileTypeError,
 )
+from app.services.text_cleaning import normalize_text
 
 # Extensiones soportadas (en minúsculas, con el punto inicial).
 SUPPORTED_EXTENSIONS: frozenset[str] = frozenset({".txt", ".md", ".pdf"})
@@ -69,7 +70,7 @@ def load_document(filename: str, content: bytes) -> str:
     except Exception as exc:  # noqa: BLE001 - se reempaqueta con contexto
         raise DocumentLoadError(filename, str(exc)) from exc
 
-    text = text.strip()
+    text = normalize_text(text)
     if not text:
         raise EmptyFileError(filename)
 

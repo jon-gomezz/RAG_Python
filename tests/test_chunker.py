@@ -6,7 +6,7 @@ from dataclasses import FrozenInstanceError
 
 import pytest
 
-from app.services.chunker import Chunk, chunk_text
+from app.services.chunker import Chunk, chunk_text, deduplicate_chunks
 
 # --- casos básicos ---------------------------------------------------------
 
@@ -97,3 +97,40 @@ def test_overlap_negativo_lanza_error():
 def test_overlap_mayor_o_igual_que_size_lanza_error(overlap):
     with pytest.raises(ValueError):
         chunk_text("texto", chunk_size=10, chunk_overlap=overlap)
+
+
+# --- deduplicado -----------------------------------------------------------
+
+
+def test_deduplicate_elimina_fragmentos_identicos():
+    chunks = [
+        Chunk(text="repetido", index=0, start=0, end=8, source="d"),
+        Chunk(text="unico", index=1, start=8, end=13, source="d"),
+        Chunk(text="repetido", index=2, start=13, end=21, source="d"),
+    ]
+    unicos = deduplicate_chunks(chunks)
+    assert [c.text for c in unicos] == ["repetido", "unico"]
+
+
+def test_deduplicate_conserva_el_primero_y_su_orden():
+    chunks = [
+        Chunk(text="a", index=0, start=0, end=1, source="d"),
+        Chunk(text="b", index=1, start=1, end=2, source="d"),
+        Chunk(text="a", index=2, start=2, end=3, source="d"),
+        Chunk(text="c", index=3, start=3, end=4, source="d"),
+    ]
+    unicos = deduplicate_chunks(chunks)
+    assert [c.text for c in unicos] == ["a", "b", "c"]
+    assert unicos[0].index == 0  # se conserva el primero
+
+
+def test_deduplicate_sin_duplicados_no_cambia():
+    chunks = [
+        Chunk(text="x", index=0, start=0, end=1, source="d"),
+        Chunk(text="y", index=1, start=1, end=2, source="d"),
+    ]
+    assert deduplicate_chunks(chunks) == chunks
+
+
+def test_deduplicate_lista_vacia():
+    assert deduplicate_chunks([]) == []
