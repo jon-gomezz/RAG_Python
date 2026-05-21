@@ -43,3 +43,21 @@ class DocumentLoadError(RAGError):
         super().__init__(
             f"No se pudo procesar el fichero '{filename}': {reason}"
         )
+
+
+class MissingAPIKeyError(RAGError):
+    """No se ha configurado la clave de API del LLM (LLM_API_KEY)."""
+
+    def __init__(self) -> None:
+        super().__init__(
+            "Falta la clave de API del LLM. Define la variable de entorno "
+            "LLM_API_KEY para poder generar respuestas."
+        )
+
+
+class LLMGenerationError(RAGError):
+    """Fallo al generar la respuesta con el proveedor LLM (red, API, etc.)."""
+
+    def __init__(self, reason: str) -> None:
+        self.reason = reason
+        super().__init__(f"Error al generar la respuesta con el LLM: {reason}")

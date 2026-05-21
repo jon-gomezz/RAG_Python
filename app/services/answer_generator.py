@@ -15,6 +15,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Protocol
 
+from app.core.exceptions import LLMGenerationError, RAGError
 from app.services.retriever import RetrievalResult
 
 # Respuesta devuelta cuando no hay contexto suficiente para responder.
@@ -103,7 +104,13 @@ class AnswerGenerator:
             )
 
         user_prompt = build_user_prompt(question, results)
-        answer = self._client.complete(system=SYSTEM_PROMPT, user=user_prompt)
+        try:
+            answer = self._client.complete(system=SYSTEM_PROMPT, user=user_prompt)
+        except RAGError:
+            # Errores de dominio (p.ej. falta de clave) se propagan tal cual.
+            raise
+        except Exception as exc:  # noqa: BLE001 - se reempaqueta con contexto
+            raise LLMGenerationError(str(exc)) from exc
         return GeneratedAnswer(
             answer=answer.strip(),
             has_sufficient_context=True,
