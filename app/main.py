@@ -9,6 +9,7 @@ conocidos a respuestas HTTP claras.
 from __future__ import annotations
 
 from fastapi import Depends, FastAPI, File, HTTPException, UploadFile, status
+from fastapi.openapi.utils import get_openapi
 
 from app.core.exceptions import RAGError, UnsupportedFileTypeError
 from app.dependencies import get_pipeline
@@ -27,6 +28,33 @@ app = FastAPI(
     description="Responde preguntas usando únicamente el contenido de los documentos subidos.",
     version="1.0.0",
 )
+
+
+def custom_openapi() -> dict:
+    """OpenAPI con un retoque para que /docs muestre un selector de fichero.
+
+    Las versiones recientes describen los ficheros de una lista con
+    ``contentMediaType``, que el visor Swagger UI no renderiza como botón de
+    subida. Lo sustituimos por ``format: binary``, que sí muestra el selector.
+    """
+    if app.openapi_schema:
+        return app.openapi_schema
+    schema = get_openapi(
+        title=app.title,
+        version=app.version,
+        description=app.description,
+        routes=app.routes,
+    )
+    body = schema.get("components", {}).get("schemas", {}).get(
+        "Body_upload_documents_documents_upload_post"
+    )
+    if body:
+        body["properties"]["files"]["items"] = {"type": "string", "format": "binary"}
+    app.openapi_schema = schema
+    return schema
+
+
+app.openapi = custom_openapi
 
 
 @app.get("/health", response_model=HealthResponse)
