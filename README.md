@@ -2,8 +2,9 @@
 
 Un servicio **FastAPI** que responde preguntas usando **únicamente** el contenido de los
 documentos `.txt`, `.md` y `.pdf` que se suban. La recuperación usa **TF-IDF + similitud
-del coseno**, y las respuestas se generan solo a partir del contexto recuperado,
-devolviendo siempre los fragmentos (fuentes) utilizados.
+del coseno** por defecto, con un **modo semántico opcional basado en embeddings**
+(`RETRIEVAL_MODE=embeddings`); las respuestas se generan solo a partir del contexto
+recuperado, devolviendo siempre los fragmentos (fuentes) utilizados.
 
 ## Características
 
