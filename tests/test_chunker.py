@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+from dataclasses import FrozenInstanceError
+
 import pytest
 
 from app.services.chunker import Chunk, chunk_text
-
 
 # --- casos básicos ---------------------------------------------------------
 
@@ -61,7 +62,7 @@ def test_reconstruccion_cubre_todo_el_texto():
     assert chunks[-1].end == len(texto)
     # las posiciones de cada chunk se corresponden con su contenido
     for c in chunks:
-        assert texto[c.start:c.end] == c.text
+        assert texto[c.start : c.end] == c.text
 
 
 # --- metadatos -------------------------------------------------------------
@@ -74,7 +75,7 @@ def test_se_propaga_el_origen_a_cada_chunk():
 
 def test_chunk_es_inmutable():
     chunk = Chunk(text="x", index=0, start=0, end=1)
-    with pytest.raises(Exception):
+    with pytest.raises(FrozenInstanceError):
         chunk.text = "y"  # type: ignore[misc]
 
 

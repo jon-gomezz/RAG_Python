@@ -8,8 +8,8 @@ on:
     branches: [main]
 
 jobs:
-  tests:
-    name: Tests (pytest)
+  calidad:
+    name: Calidad y tests
     runs-on: ubuntu-latest
 
     steps:
@@ -25,8 +25,17 @@ jobs:
       - name: Instalar dependencias
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
 
-      - name: Ejecutar tests
+      - name: Linter (ruff)
+        run: ruff check .
+
+      - name: Formato (ruff format)
+        run: ruff format --check .
+
+      - name: Tipos (mypy)
+        run: mypy app
+
+      - name: Tests (pytest)
         # Los tests usan un LLM simulado: no se necesita LLM_API_KEY real.
         run: pytest -q

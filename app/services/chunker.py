@@ -80,9 +80,7 @@ def chunk_text(
     while start < length:
         end = min(start + chunk_size, length)
         fragment = text[start:end]
-        chunks.append(
-            Chunk(text=fragment, index=index, start=start, end=end, source=source)
-        )
+        chunks.append(Chunk(text=fragment, index=index, start=start, end=end, source=source))
         if end == length:
             break
         index += 1

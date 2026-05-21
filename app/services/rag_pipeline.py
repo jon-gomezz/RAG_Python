@@ -14,7 +14,7 @@ la orquestación con dobles de prueba.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
+from enum import StrEnum
 
 from app.services.answer_generator import AnswerGenerator
 from app.services.chunker import chunk_text
@@ -24,12 +24,11 @@ from app.store.document_store import DocumentStore
 
 # Mensaje cuando se pregunta sin haber subido ningún documento.
 NO_DOCUMENTS_MESSAGE = (
-    "Todavía no se ha subido ningún documento. Sube al menos un documento "
-    "antes de hacer preguntas."
+    "Todavía no se ha subido ningún documento. Sube al menos un documento antes de hacer preguntas."
 )
 
 
-class AnswerStatus(str, Enum):
+class AnswerStatus(StrEnum):
     """Estado del resultado de una pregunta."""
 
     ANSWERED = "answered"

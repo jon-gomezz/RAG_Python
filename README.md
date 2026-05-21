@@ -125,6 +125,27 @@ pytest
 Cubren loaders, chunker, retriever, almacén, generador de respuestas (con LLM
 simulado), la tubería RAG completa, la API y los casos de error.
 
+## Desarrollo y calidad de código
+
+Para trabajar en el proyecto, instala las dependencias de desarrollo (incluye
+tests y herramientas de calidad):
+
+```bash
+pip install -r requirements-dev.txt
+pre-commit install        # ejecuta linter/formato antes de cada commit
+```
+
+Herramientas:
+
+```bash
+ruff check .              # linter
+ruff format .             # formateo automático
+mypy app                  # comprobación de tipos
+```
+
+La **Integración Continua** (GitHub Actions, `.github/workflows/ci.yml`) ejecuta
+linter, formato, tipos y tests en cada push y pull request.
+
 ## Decisiones técnicas
 
 - **FastAPI**: framework moderno, tipado y con documentación automática (`/docs`).

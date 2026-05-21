@@ -1,13 +1,10 @@
-fastapi
-uvicorn[standard]
-pydantic
-pydantic-settings
-python-multipart
-scikit-learn
-pypdf
-openai
-python-dotenv
-
-# Testing
-pytest
-httpx
+# Dependencias de ejecución (runtime). Versiones fijadas para reproducibilidad.
+fastapi==0.136.1
+uvicorn[standard]==0.47.0
+pydantic==2.13.4
+pydantic-settings==2.14.1
+python-multipart==0.0.29
+scikit-learn==1.8.0
+pypdf==6.11.0
+openai==2.37.0
+python-dotenv==1.2.2

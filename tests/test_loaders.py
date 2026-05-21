@@ -21,9 +21,8 @@ from app.services.loaders import (
 def _make_pdf(text: str) -> bytes:
     """Crea un PDF mínimo en memoria con una página de texto."""
     writer = PdfWriter()
-    page = writer.add_blank_page(width=200, height=200)
-    # add_blank_page no escribe texto; insertamos texto vía anotación de página.
-    # Para pruebas de extracción usamos un PDF con contenido de texto real.
+    # Página en blanco: no aporta texto (sirve para el caso de PDF vacío).
+    writer.add_blank_page(width=200, height=200)
     buffer = io.BytesIO()
     writer.write(buffer)
     return buffer.getvalue()
@@ -46,24 +45,24 @@ def test_get_extension_es_insensible_a_mayusculas(filename, expected):
 
 
 def test_extensiones_soportadas():
-    assert SUPPORTED_EXTENSIONS == frozenset({".txt", ".md", ".pdf"})
+    assert frozenset({".txt", ".md", ".pdf"}) == SUPPORTED_EXTENSIONS
 
 
 # --- ficheros de texto (.txt / .md) ----------------------------------------
 
 
 def test_carga_txt():
-    content = "Hola mundo\nSegunda línea".encode("utf-8")
+    content = "Hola mundo\nSegunda línea".encode()
     assert load_document("saludo.txt", content) == "Hola mundo\nSegunda línea"
 
 
 def test_carga_md():
-    content = "# Título\n\nContenido en markdown".encode("utf-8")
+    content = "# Título\n\nContenido en markdown".encode()
     assert load_document("notas.md", content) == "# Título\n\nContenido en markdown"
 
 
 def test_carga_txt_recorta_espacios():
-    content = "   \n  texto rodeado de espacios  \n  ".encode("utf-8")
+    content = b"   \n  texto rodeado de espacios  \n  "
     assert load_document("doc.txt", content) == "texto rodeado de espacios"
 
 

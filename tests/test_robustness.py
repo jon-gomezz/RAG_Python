@@ -45,7 +45,13 @@ def _cleanup():
 
 
 def _subir_doc(client: TestClient) -> None:
-    files = {"files": ("doc.txt", b"Los planetas del sistema solar giran alrededor del sol.", "text/plain")}
+    files = {
+        "files": (
+            "doc.txt",
+            b"Los planetas del sistema solar giran alrededor del sol.",
+            "text/plain",
+        )
+    }
     client.post("/documents/upload", files=files)
 
 
