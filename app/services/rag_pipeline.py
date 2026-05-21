@@ -17,7 +17,7 @@ from dataclasses import dataclass
 from enum import StrEnum
 
 from app.services.answer_generator import AnswerGenerator
-from app.services.chunker import chunk_text
+from app.services.chunker import chunk_text, deduplicate_chunks
 from app.services.loaders import load_document
 from app.services.retriever import RetrievalResult, TfidfRetriever
 from app.store.document_store import DocumentStore
@@ -89,6 +89,7 @@ class RAGPipeline:
             chunk_overlap=self._chunk_overlap,
             source=filename,
         )
+        chunks = deduplicate_chunks(chunks)
         self._store.add_document(filename, chunks)
         # Reconstruimos el índice con todos los fragmentos acumulados.
         self._retriever.index(self._store.chunks)
