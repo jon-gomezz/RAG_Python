@@ -13,6 +13,7 @@ from fastapi.responses import JSONResponse
 
 from app.core.exceptions import (
     DocumentLoadError,
+    EmbeddingError,
     EmptyFileError,
     LLMGenerationError,
     MissingAPIKeyError,
@@ -27,6 +28,7 @@ _STATUS_BY_EXCEPTION: list[tuple[type[RAGError], int]] = [
     (DocumentLoadError, 422),
     (MissingAPIKeyError, 503),  # servicio mal configurado
     (LLMGenerationError, 502),  # fallo del proveedor externo
+    (EmbeddingError, 502),  # fallo del proveedor externo (embeddings)
 ]
 
 

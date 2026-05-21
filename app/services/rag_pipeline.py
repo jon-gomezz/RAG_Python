@@ -19,7 +19,7 @@ from enum import StrEnum
 from app.services.answer_generator import AnswerGenerator
 from app.services.chunker import chunk_text, deduplicate_chunks
 from app.services.loaders import load_document
-from app.services.retriever import RetrievalResult, TfidfRetriever
+from app.services.retriever import RetrievalResult, Retriever
 from app.store.document_store import DocumentStore
 
 # Mensaje cuando se pregunta sin haber subido ningún documento.
@@ -60,7 +60,7 @@ class RAGPipeline:
         self,
         *,
         store: DocumentStore,
-        retriever: TfidfRetriever,
+        retriever: Retriever,
         answer_generator: AnswerGenerator,
         chunk_size: int,
         chunk_overlap: int,

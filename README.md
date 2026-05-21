@@ -58,8 +58,18 @@ Todos los ajustes se leen desde variables de entorno (ver `.env.example`):
 | `CHUNK_OVERLAP`       | `150`          | Solapamiento (caracteres) entre fragmentos      |
 | `TOP_K`               | `4`            | Número de fragmentos recuperados por pregunta   |
 | `MIN_RELEVANCE_SCORE` | `0.1`          | Puntuación mínima del coseno para un fragmento  |
-| `LLM_API_KEY`         | _(vacío)_      | Clave de API del proveedor LLM (OpenAI)         |
+| `RETRIEVAL_MODE`      | `tfidf`        | Modo de recuperación: `tfidf` o `embeddings`    |
+| `EMBEDDING_MODEL`     | `text-embedding-3-small` | Modelo de embeddings (modo `embeddings`) |
+| `LLM_API_KEY`         | _(vacío)_      | Clave de API del proveedor LLM/embeddings (OpenAI) |
 | `LLM_MODEL`           | `gpt-4o-mini`  | Modelo usado para la generación de respuestas   |
+
+### Modos de recuperación
+
+- **`tfidf`** (por defecto): comparación léxica (palabras), determinista, gratis
+  y sin dependencias externas. Ideal para tests y para el alcance del reto.
+- **`embeddings`**: comparación **semántica** (significado) con embeddings de
+  OpenAI. Entiende sinónimos y cruza idiomas, a cambio de coste, latencia y
+  necesitar `LLM_API_KEY`. Se activa con `RETRIEVAL_MODE=embeddings`.
 
 ## Ejemplos de uso
 
@@ -151,9 +161,11 @@ linter, formato, tipos y tests en cada push y pull request.
 ## Decisiones técnicas
 
 - **FastAPI**: framework moderno, tipado y con documentación automática (`/docs`).
-- **TF-IDF + similitud del coseno** para la recuperación (en lugar de embeddings):
-  es **determinista**, no requiere servicios externos para buscar y es **fácil de
-  testear**, suficiente para el alcance del reto.
+- **TF-IDF + similitud del coseno** como recuperación por defecto: es
+  **determinista**, no requiere servicios externos para buscar y es **fácil de
+  testear**. Se complementa con un **modo semántico opcional con embeddings**
+  (`RETRIEVAL_MODE=embeddings`), intercambiable gracias a una interfaz común
+  `Retriever`, para casos que requieren entender significados o cruzar idiomas.
 - **Fragmentación por caracteres con solapamiento**: simple y predecible; el
   solapamiento reduce el riesgo de partir una idea entre dos fragmentos.
 - **Detección de contexto insuficiente antes de llamar al LLM**: si la recuperación

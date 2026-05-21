@@ -12,6 +12,7 @@ alcance del proyecto.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Protocol
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -30,6 +31,18 @@ class RetrievalResult:
 
     chunk: Chunk
     score: float
+
+
+class Retriever(Protocol):
+    """Interfaz común de un recuperador (permite intercambiar TF-IDF/embeddings)."""
+
+    def index(self, chunks: list[Chunk]) -> None:
+        """Construye el índice a partir de los fragmentos dados."""
+        ...
+
+    def retrieve(self, query: str, *, top_k: int, min_score: float) -> list[RetrievalResult]:
+        """Devuelve los fragmentos más relevantes para una pregunta."""
+        ...
 
 
 class TfidfRetriever:

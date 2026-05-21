@@ -15,6 +15,19 @@ def test_valores_por_defecto():
     assert s.top_k == 4
     assert s.min_relevance_score == 0.1
     assert s.llm_model == "gpt-4o-mini"
+    assert s.retrieval_mode == "tfidf"
+    assert s.embedding_model == "text-embedding-3-small"
+
+
+def test_retrieval_mode_embeddings(monkeypatch):
+    monkeypatch.setenv("RETRIEVAL_MODE", "embeddings")
+    assert Settings(_env_file=None).retrieval_mode == "embeddings"
+
+
+def test_rechaza_retrieval_mode_invalido(monkeypatch):
+    monkeypatch.setenv("RETRIEVAL_MODE", "magia")
+    with pytest.raises(ValidationError):
+        Settings(_env_file=None)
 
 
 def test_lee_de_variables_de_entorno(monkeypatch):
