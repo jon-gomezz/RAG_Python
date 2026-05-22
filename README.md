@@ -165,6 +165,9 @@ linter, formato, tipos y tests en cada push y pull request.
 
 ## Decisiones técnicas
 
+> Explicación **en profundidad** (con alternativas y contrapartidas) en
+> [`DECISIONS.md`](DECISIONS.md). Resumen:
+
 - **FastAPI**: framework moderno, tipado y con documentación automática (`/docs`).
 - **TF-IDF + similitud del coseno** como recuperación por defecto: es
   **determinista**, no requiere servicios externos para buscar y es **fácil de
