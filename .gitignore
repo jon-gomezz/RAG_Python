@@ -1,7 +1,3 @@
-# Material de trabajo solo local (no forma parte del entregable)
-docs/
-CLAUDE.md
-
 # Python
 __pycache__/
 *.py[cod]
